@@ -8,9 +8,10 @@ import { RaceStatus } from '../../models/race-status';
 import { DataService } from '../../services/data-service';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.scss',
+    standalone: false
 })
 export class HomeComponent {
   displayedColumns: string[] = ['Place', 'Name', 'TotalPoints'];

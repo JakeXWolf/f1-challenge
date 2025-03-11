@@ -5,9 +5,10 @@ import { Driver } from '../../models/driver';
 import { DataService } from '../../services/data-service';
 
 @Component({
-  selector: 'app-generate-lineup',
-  templateUrl: './generate-lineup.component.html',
-  styleUrls: ['./generate-lineup.component.scss']
+    selector: 'app-generate-lineup',
+    templateUrl: './generate-lineup.component.html',
+    styleUrls: ['./generate-lineup.component.scss'],
+    standalone: false
 })
 export class GenerateLineupComponent implements OnInit {
   users: User[] = [];

@@ -5,9 +5,10 @@ import { Driver } from '../../models/driver';
 import { DataService } from '../../services/data-service';
 
 @Component({
-  selector: 'app-driver-champ-standings',
-  templateUrl: './driver-champ-standings.component.html',
-  styleUrl: './driver-champ-standings.component.scss'
+    selector: 'app-driver-champ-standings',
+    templateUrl: './driver-champ-standings.component.html',
+    styleUrl: './driver-champ-standings.component.scss',
+    standalone: false
 })
 export class DriverChampStandingsComponent {
   displayedColumns: string[] = ['Position', 'Name', 'Number'];
