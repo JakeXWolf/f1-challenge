@@ -1,0 +1,70 @@
+[debug] [2025-02-28T04:55:22.659Z] ----------------------------------------------------------------------
+[debug] [2025-02-28T04:55:22.660Z] Command:       /usr/local/bin/node /usr/local/bin/firebase init
+[debug] [2025-02-28T04:55:22.660Z] CLI Version:   13.32.0
+[debug] [2025-02-28T04:55:22.661Z] Platform:      darwin
+[debug] [2025-02-28T04:55:22.661Z] Node Version:  v20.9.0
+[debug] [2025-02-28T04:55:22.661Z] Time:          Thu Feb 27 2025 23:55:22 GMT-0500 (Eastern Standard Time)
+[debug] [2025-02-28T04:55:22.661Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-02-28T04:55:22.663Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-02-28T04:55:22.663Z] > authorizing via signed-in user (wolftechengineering@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /Users/jakewolf/Documents/repos/f1-challenge
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[info] i  If you want to create a project in a Google Cloud organization or folder, please use "firebase projects:create" instead, and return to this command when you've created the project. 
+[debug] [2025-02-28T04:55:43.742Z] Checked if tokens are valid: true, expires at: 1740720920917
+[debug] [2025-02-28T04:55:43.742Z] Checked if tokens are valid: true, expires at: 1740720920917
+[debug] [2025-02-28T04:55:43.744Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects [none]
+[debug] [2025-02-28T04:55:43.745Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"projectId":"f1-challenge-backend","name":"f1-challenge-backend"}
+[debug] [2025-02-28T04:55:44.056Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects 200
+[debug] [2025-02-28T04:55:44.056Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"name":"operations/cp.7949784230708003241"}
+[debug] [2025-02-28T04:55:44.057Z] Checked if tokens are valid: true, expires at: 1740720920917
+[debug] [2025-02-28T04:55:44.057Z] Checked if tokens are valid: true, expires at: 1740720920917
+[debug] [2025-02-28T04:55:44.057Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/operations/cp.7949784230708003241 [none]
+[debug] [2025-02-28T04:55:44.366Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/operations/cp.7949784230708003241 200
+[debug] [2025-02-28T04:55:44.366Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/operations/cp.7949784230708003241 {"name":"operations/cp.7949784230708003241"}
+[debug] [2025-02-28T04:55:44.868Z] [Project Creation Poller] Retrying task index 0
+[debug] [2025-02-28T04:55:44.868Z] Checked if tokens are valid: true, expires at: 1740720920917
+[debug] [2025-02-28T04:55:44.868Z] Checked if tokens are valid: true, expires at: 1740720920917
+[debug] [2025-02-28T04:55:44.868Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/operations/cp.7949784230708003241 [none]
+[debug] [2025-02-28T04:55:45.084Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/operations/cp.7949784230708003241 200
+[debug] [2025-02-28T04:55:45.085Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/operations/cp.7949784230708003241 {"name":"operations/cp.7949784230708003241"}
+[debug] [2025-02-28T04:55:46.086Z] [Project Creation Poller] Retrying task index 0
+[debug] [2025-02-28T04:55:46.087Z] Checked if tokens are valid: true, expires at: 1740720920917
+[debug] [2025-02-28T04:55:46.087Z] Checked if tokens are valid: true, expires at: 1740720920917
+[debug] [2025-02-28T04:55:46.088Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/operations/cp.7949784230708003241 [none]
+[debug] [2025-02-28T04:55:46.414Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/operations/cp.7949784230708003241 200
+[debug] [2025-02-28T04:55:46.415Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/operations/cp.7949784230708003241 {"name":"operations/cp.7949784230708003241"}
+[debug] [2025-02-28T04:55:48.416Z] [Project Creation Poller] Retrying task index 0
+[debug] [2025-02-28T04:55:48.417Z] Checked if tokens are valid: true, expires at: 1740720920917
+[debug] [2025-02-28T04:55:48.417Z] Checked if tokens are valid: true, expires at: 1740720920917
+[debug] [2025-02-28T04:55:48.418Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/operations/cp.7949784230708003241 [none]
+[debug] [2025-02-28T04:55:48.769Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/operations/cp.7949784230708003241 200
+[debug] [2025-02-28T04:55:48.769Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/operations/cp.7949784230708003241 {"name":"operations/cp.7949784230708003241","metadata":{"@type":"type.googleapis.com/google.cloudresourcemanager.v1.ProjectCreationStatus","gettable":true,"ready":true},"done":true,"response":{"@type":"type.googleapis.com/google.cloudresourcemanager.v1.Project","projectNumber":"837168793207","projectId":"f1-challenge-backend","lifecycleState":"ACTIVE","name":"f1-challenge-backend","createTime":"2025-02-28T04:55:46.717543Z"}}
+[debug] [2025-02-28T04:55:48.771Z] Checked if tokens are valid: true, expires at: 1740720920917
+[debug] [2025-02-28T04:55:48.771Z] Checked if tokens are valid: true, expires at: 1740720920917
+[debug] [2025-02-28T04:55:48.771Z] >>> [apiv2][query] POST https://firebase.googleapis.com/v1beta1/projects/f1-challenge-backend:addFirebase [none]
+[debug] [2025-02-28T04:55:49.485Z] <<< [apiv2][status] POST https://firebase.googleapis.com/v1beta1/projects/f1-challenge-backend:addFirebase 403
+[debug] [2025-02-28T04:55:49.486Z] <<< [apiv2][body] POST https://firebase.googleapis.com/v1beta1/projects/f1-challenge-backend:addFirebase {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2025-02-28T04:55:49.487Z] Request to https://firebase.googleapis.com/v1beta1/projects/f1-challenge-backend:addFirebase had HTTP Error: 403, The caller does not have permission
+[debug] [2025-02-28T04:55:49.618Z] FirebaseError: Request to https://firebase.googleapis.com/v1beta1/projects/f1-challenge-backend:addFirebase had HTTP Error: 403, The caller does not have permission
+    at responseToError (/usr/local/lib/node_modules/firebase-tools/lib/responseToError.js:52:12)
+    at RetryOperation._fn (/usr/local/lib/node_modules/firebase-tools/lib/apiv2.js:312:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[error] 
+[error] Error: Failed to add Firebase to Google Cloud Platform project. See firebase-debug.log for more info.

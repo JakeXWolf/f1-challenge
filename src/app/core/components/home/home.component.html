@@ -1,1 +1,72 @@
 <p>home works!</p>
+
+<table mat-table [dataSource]="users" class="mat-elevation-z8">
+    <!-- Place Column -->
+  <ng-container matColumnDef="Place">
+    <th mat-header-cell *matHeaderCellDef> Place </th>
+    <td mat-cell *matCellDef="let user; let i = index"> {{i + 1}} </td>
+  </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="Name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let user"> {{user.Name}} </td>
+      </ng-container>
+  
+    <!-- Total Points Column -->
+    <ng-container matColumnDef="TotalPoints">
+      <th mat-header-cell *matHeaderCellDef> Total Points </th>
+      <td mat-cell *matCellDef="let user"> {{user.TotalPoints}} </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+<table mat-table [dataSource]="grandPrixList" class="mat-elevation-z8">
+
+    <!-- RaceNum Column -->
+    <ng-container matColumnDef="RaceNum">
+      <th mat-header-cell *matHeaderCellDef> Race Number </th>
+      <td mat-cell *matCellDef="let grandPrix"> {{grandPrix.RaceNum}} </td>
+    </ng-container>
+  
+    <!-- Name Column -->
+    <ng-container matColumnDef="Name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let grandPrix"> {{grandPrix.Name}} </td>
+    </ng-container>
+  
+    <!-- Location Column -->
+    <ng-container matColumnDef="Location">
+      <th mat-header-cell *matHeaderCellDef> Location </th>
+      <td mat-cell *matCellDef="let grandPrix"> {{grandPrix.Location}} </td>
+    </ng-container>
+  
+    <!-- Date Column -->
+    <ng-container matColumnDef="Date">
+      <th mat-header-cell *matHeaderCellDef> Date </th>
+      <td mat-cell *matCellDef="let grandPrix"> {{grandPrix.Date | date}} </td>
+    </ng-container>
+  
+    <!-- HasSprint Column -->
+    <ng-container matColumnDef="HasSprint">
+      <th mat-header-cell *matHeaderCellDef> Has Sprint </th>
+      <td mat-cell *matCellDef="let grandPrix"> {{grandPrix.HasSprint}} </td>
+    </ng-container>
+  
+    <!-- SprintDate Column -->
+    <!-- <ng-container matColumnDef="SprintDate">
+      <th mat-header-cell *matHeaderCellDef> Sprint Date </th>
+      <td mat-cell *matCellDef="let grandPrix"> {{grandPrix.SprintDate | date}} </td>
+    </ng-container> -->
+  
+    <!-- RaceStatus Column -->
+    <ng-container matColumnDef="RaceStatus">
+      <th mat-header-cell *matHeaderCellDef> Race Status </th>
+      <td mat-cell *matCellDef="let grandPrix"> {{grandPrix.RaceStatus}} </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="gpDisplayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: gpDisplayedColumns;"></tr>
+</table>
