@@ -23,8 +23,13 @@ export class HomeComponent {
   constructor(private dataService: DataService) {}
 
   ngOnInit() {
-    this.dataService.getUsers().subscribe(users => {
-      this.users = users; 
+    // this.dataService.getUsers().subscribe(users => {
+    //   this.users = users; 
+    // });
+
+    this.dataService.getUsers().subscribe({
+      next: (data) => this.users = data,
+      error: (err) => console.error('Error fetching users:', err)
     });
 
     this.dataService.getGrandPrixList().subscribe(grandPrixList => {

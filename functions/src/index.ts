@@ -1,19 +1,21 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const cors = require("cors");
 
-import {onRequest} from "firebase-functions/v2/https";
-import * as logger from "firebase-functions/logger";
+admin.initializeApp();
+const db = admin.firestore();
+const corsHandler = cors({origin: true});
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
-
-// export const helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+export const getUsers = functions.https.onRequest((req, res) => {
+  corsHandler(req, res, async () => {
+    try {
+      const snapshot = await db.collection("users").get();
+      const users = snapshot.docs.map((doc) => doc.data());
+      res.status(200).json(users);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error fetching users: " + error);
+    }
+  });
+});

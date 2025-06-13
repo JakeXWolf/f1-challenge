@@ -17,28 +17,28 @@
           "standalone": false
         }
       },
-      "root": "",
-      "sourceRoot": "src",
+      "root": "angular-app",
+      "sourceRoot": "angular-app/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/f1-challenge",
-            "index": "src/index.html",
-            "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "index": "angular-app/src/index.html",
+            "browser": "angular-app/src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "angular-app/src/favicon.ico",
+              "angular-app/src/assets"
             ],
             "styles": [
               "@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.scss"
+              "angular-app/src/styles.scss"
+            ],
+            "polyfills": [
+              "angular-app/src/polyfills.ts"
             ],
             "scripts": []
           },
@@ -64,7 +64,7 @@
               "sourceMap": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -87,19 +87,16 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": "angular-app/src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "angular-app/src/favicon.ico",
+              "angular-app/src/assets"
             ],
             "styles": [
               "@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.scss"
+              "angular-app/src/styles.scss"
             ],
             "scripts": []
           }

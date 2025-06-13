@@ -11,31 +11,59 @@ import { DataService } from '../../services/data-service';
     standalone: false
 })
 export class GenerateLineupComponent implements OnInit {
-  users: User[] = [];
+  @Input() drivers: Driver[] = [];
+  @Input() users: User[] = [];
+
   constructorLineup: Constructor[] = [];
 
   displayedColumns: string[] = ['Constructor', 'Driver 1', 'Driver 2'];
 
-  drivers: Driver[] = [];
-
   constructor(private dataService: DataService) {}
 
   ngOnInit(): void {
+    if (this.users.length === 0) {
+      console.log('Users are empty');
+      this.getUsersAndSetUpConstructors();
+    }
+
+    if (this.drivers.length === 0) {
+      console.log('Drivers are empty');
+      this.getDrivers();
+    }
+  }
+
+  onSaveLineups(): void {
+    console.log('Saving constructor lineup');
+
+    const raceNum = 6;
+    const isSprint = true; // or false depending on the context
+  
+    this.dataService.saveConstructorLineup(raceNum, isSprint, this.constructorLineup).subscribe({
+      next: () => console.log('All lineups saved successfully!'),
+      error: err => console.error('Error saving some lineups:', err)
+    });
+  }
+  
+
+  private getUsersAndSetUpConstructors(): void {
     this.dataService.getUsers().subscribe(users => {
       this.users = users; 
-    });
-    
-    // Initialize constructorLineup with empty fields
-    const randomizedUsers = this.users.sort(() => Math.random() - 0.5);
-    randomizedUsers.forEach(user => {
-      this.constructorLineup.push({
-        UserName: user.Name,
-        Driver1: { Number: 0, Name: '', ChampionshipPosition: 0 },
-        Driver2: { Number: 0, Name: '', ChampionshipPosition: 0 },
-        DriverNumbers: []
+      
+      // Initialize constructorLineup with empty fields
+      const randomizedUsers = this.users.sort(() => Math.random() - 0.5);
+      randomizedUsers.forEach(user => {
+        this.constructorLineup.push({
+          UserName: user.Name,
+          Driver1: { Number: 0, Name: '', ChampionshipPosition: 0 },
+          Driver2: { Number: 0, Name: '', ChampionshipPosition: 0 },
+          DriverNumbers: [],
+          TotalPoints: 0
+        });
       });
     });
+  }
 
+  private getDrivers(): void { 
     this.dataService.getDriverList().subscribe(drivers => {
       this.drivers = drivers; 
     });
@@ -95,11 +123,7 @@ export class GenerateLineupComponent implements OnInit {
       }
     });
 
-    // // Assign the "Best of the Rest" driver to the last user
-    // if (bestOfTheRest.length > 0) {
-    //   this.constructorLineup[numberOfUsers - 1].Driver2 = bestOfTheRest[0];
-    //   this.constructorLineup[numberOfUsers - 1].DriverNumbers.push(...restDriverNumbers);
-    // }
     console.log('Constructor lineup:', this.constructorLineup);
+    console.log('Constructor lineup:', JSON.stringify(this.constructorLineup, null, 2));
   }
 }

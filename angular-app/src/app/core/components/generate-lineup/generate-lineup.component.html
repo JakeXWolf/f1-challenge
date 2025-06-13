@@ -1,6 +1,8 @@
 <button mat-raised-button (click)="onAssignDrivers()">Generate Driver Lineup</button>
 
-<table mat-table [dataSource]="constructorLineup" class="mat-elevation-z8">
+<!-- <table mat-table [dataSource]="constructorLineup" class="mat-elevation-z8"> -->
+<table mat-table [dataSource]="constructorLineup" class="mat-elevation-z8" *ngIf="constructorLineup.length > 0">
+
     <!-- Place Column -->
   <ng-container matColumnDef="Constructor">
     <th mat-header-cell *matHeaderCellDef> Constructor </th>
@@ -23,3 +25,7 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+
+<button mat-raised-button color="accent" (click)="onSaveLineups()" *ngIf="constructorLineup.length > 0">
+  Save Lineups to Firebase
+</button>
