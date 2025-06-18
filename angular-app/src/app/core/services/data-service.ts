@@ -1,8 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, race, from } from 'rxjs';
-
-import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 import { User } from '../models/user';
 import { GrandPrix } from '../models/race';
@@ -15,41 +13,27 @@ import { constructorLineup_Australia, drivers, grandPrixList, raceResults_Austra
 
 import { buildRaceId } from '../utils';
 
+
 @Injectable({
   providedIn: 'root',
 })
 export class DataService {
-  constructor(private http: HttpClient, private firestore: AngularFirestore) {}
-
-  saveConstructorLineup(
-    raceNum: number,
-    isSprint: boolean,
-    lineup: Constructor[]
-  ): Observable<void> {
-    const raceId = `${raceNum}${isSprint ? 'SP' : 'GP'}`;
-
-    const savePromises = lineup.map(c => {
-      const userId = c.UserName.toLowerCase().replace(/\s/g, '-');
-      return this.saveLineup(userId, raceId, c); // 👈 fire here from instance method
-    });
-
-    return from(Promise.all(savePromises).then(() => undefined));
-  }
-
-  private saveLineup(userId: string, raceId: string, lineup: Constructor): Promise<void> {
-    return this.firestore
-      .collection('users')
-      .doc(userId)
-      .collection('lineups')
-      .doc(raceId)
-      .set(lineup);
-  }
-  
+  constructor(private http: HttpClient) {}
 
   getUsers(): Observable<User[]> {
-    const functionUrl = 'https://getusers-vzdcza3fpq-uc.a.run.app/getusers'; // Paste your URL here
+    //const functionUrl = 'https://getusers-vzdcza3fpq-uc.a.run.app/getusers'; // Paste your URL here
+    const functionUrl = 'https://us-central1-f1-challenge-backendapi.cloudfunctions.net/getUsers';
+
     return this.http.get<User[]>(functionUrl);
   }
+
+  saveConstructorLineup(raceNum: number, isSprint: boolean, lineup: Constructor[]): Observable<void> {
+    const raceId = buildRaceId(raceNum, isSprint);
+    const url = 'https://us-central1-f1-challenge-backendapi.cloudfunctions.net/saveConstructorLineup';
+  
+    return this.http.post<void>(url, { raceId, lineup });
+  }
+  
 
   getGrandPrixList(): Observable<GrandPrix[]> {
     // TODO: MAKE API CALL

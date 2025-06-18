@@ -4,9 +4,10 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
-import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -40,9 +41,10 @@ import { environment } from '../environment';
       AngularFireModule.initializeApp(environment.firebase),
       AngularFirestoreModule,
   
-      MatTableModule,
       MatButtonModule,
+      MatExpansionModule,
       MatInputModule,
+      MatTableModule,
   
       DragDropModule,
       FormsModule

@@ -31,7 +31,7 @@ export class GenerateLineupComponent implements OnInit {
       this.getDrivers();
     }
   }
-
+/*
   onSaveLineups(): void {
     console.log('Saving constructor lineup');
 
@@ -43,10 +43,30 @@ export class GenerateLineupComponent implements OnInit {
       error: err => console.error('Error saving some lineups:', err)
     });
   }
+*/
+  onSaveLineups(): void {
+    const raceNum = 6;
+    const isSprint = true;
+
+    this.dataService.saveConstructorLineup(raceNum, isSprint, this.constructorLineup).subscribe({
+      next: () => {
+        console.log('Lineups saved to Firebase function');
+        alert('Lineups saved successfully!');
+      },
+      error: err => {
+        console.error('Failed to save lineups:', err);
+        alert('Error saving lineups!');
+      }
+    });
+  }
+
   
 
   private getUsersAndSetUpConstructors(): void {
     this.dataService.getUsers().subscribe(users => {
+    //this.dataService.getUsersFromFirestore().subscribe(users => {
+      console.log('Users fetched:', users);
+
       this.users = users; 
       
       // Initialize constructorLineup with empty fields
