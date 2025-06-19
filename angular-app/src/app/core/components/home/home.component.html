@@ -1,4 +1,3 @@
-<p>home works!</p>
 
 <table mat-table [dataSource]="users" class="mat-elevation-z8">
     <!-- Place Column -->
@@ -54,13 +53,7 @@
       <th mat-header-cell *matHeaderCellDef> Has Sprint </th>
       <td mat-cell *matCellDef="let grandPrix"> {{grandPrix.HasSprint}} </td>
     </ng-container>
-  
-    <!-- SprintDate Column -->
-    <!-- <ng-container matColumnDef="SprintDate">
-      <th mat-header-cell *matHeaderCellDef> Sprint Date </th>
-      <td mat-cell *matCellDef="let grandPrix"> {{grandPrix.SprintDate | date}} </td>
-    </ng-container> -->
-  
+
     <!-- RaceStatus Column -->
     <ng-container matColumnDef="RaceStatus">
       <th mat-header-cell *matHeaderCellDef> Race Status </th>
@@ -71,21 +64,59 @@
     <tr mat-row *matRowDef="let row; columns: gpDisplayedColumns;"></tr>
 </table>
 
-<mat-accordion>
-  <mat-expansion-panel hideToggle>
+
+<mat-accordion multi>
+  <mat-expansion-panel *ngFor="let race of grandPrixList" (opened)="loadRaceContent(race)">
     <mat-expansion-panel-header>
-      <mat-panel-title> This is the expansion title </mat-panel-title>
-      <mat-panel-description> This is a summary of the content </mat-panel-description>
-    </mat-expansion-panel-header>
-    <p>This is the primary content of the panel.</p>
-  </mat-expansion-panel>
-  <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
-    <mat-expansion-panel-header>
-      <mat-panel-title> Self aware panel </mat-panel-title>
+      <mat-panel-title>
+        {{ race.Name }} — {{ race.Location }}
+      </mat-panel-title>
       <mat-panel-description>
-        Currently I am {{panelOpenState() ? 'open' : 'closed'}}
+        {{ race.RaceStatus }}
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <p>I'm visible because I am open</p>
+
+    <ng-container *ngIf="race.RaceStatus === RaceStatus.COMPLETED">
+      <h3>Race Results</h3>
+      <table mat-table [dataSource]="selectedRaceResults[buildRaceId(race)]" class="mat-elevation-z8" *ngIf="selectedRaceResults[buildRaceId(race)]">
+        <!-- Columns: Position, Driver, Car, Points -->
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef> Pos </th>
+          <td mat-cell *matCellDef="let result"> {{ result.position }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="driver">
+          <th mat-header-cell *matHeaderCellDef> Driver </th>
+          <td mat-cell *matCellDef="let result"> {{ result.driver }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="car">
+          <th mat-header-cell *matHeaderCellDef> Car </th>
+          <td mat-cell *matCellDef="let result"> {{ result.car }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="points">
+          <th mat-header-cell *matHeaderCellDef> Points </th>
+          <td mat-cell *matCellDef="let result"> {{ result.points }} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['position', 'driver', 'car', 'points']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['position', 'driver', 'car', 'points']"></tr>
+      </table>
+    </ng-container>
+
+    <ng-container *ngIf="race.RaceStatus !== RaceStatus.COMPLETED">
+      <div *ngIf="selectedLineups[buildRaceId(race)]?.length">
+        <h3>Pending Lineup</h3>
+        <ul>
+          <li *ngFor="let c of selectedLineups[buildRaceId(race)]">
+            {{ c.UserName }}: {{ c.Driver1.Name }} & {{ c.Driver2.Name }}
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="!selectedLineups[buildRaceId(race)]?.length">
+        {{ getRaceDisplayText(race) }}
+      </div>
+    </ng-container>
   </mat-expansion-panel>
 </mat-accordion>

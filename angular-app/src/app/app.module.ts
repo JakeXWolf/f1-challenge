@@ -7,6 +7,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
 
@@ -44,6 +45,7 @@ import { environment } from '../environment';
       MatButtonModule,
       MatExpansionModule,
       MatInputModule,
+      MatSlideToggleModule,
       MatTableModule,
   
       DragDropModule,

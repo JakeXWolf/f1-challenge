@@ -47,3 +47,49 @@ export const saveConstructorLineup = functions.https.onRequest((req, res) => {
     }
   });
 });
+
+
+export const saveRaceChallengeResults = functions.https.onRequest((req, res) => {
+    corsHandler(req, res, async () => {
+      try {
+        const { raceId, results } = req.body;
+        if (!raceId || !Array.isArray(results)) {
+          res.status(400).send('Invalid payload');
+          return;
+        }
+  
+        const batch = db.batch();
+        results.forEach(result => {
+          const ref = db.collection('raceChallengeResults').doc(raceId).collection('entries').doc(result.UserName);
+          batch.set(ref, result);
+        });
+  
+        await batch.commit();
+        res.status(200).send('Challenge results saved.');
+      } catch (error) {
+        console.error('Error saving challenge results:', error);
+        res.status(500).send('Failed to save challenge results');
+      }
+    });
+  });
+  
+
+  export const getRaceChallengeResults = functions.https.onRequest((req, res) => {
+    corsHandler(req, res, async () => {
+      const raceId = req.query.raceId as string;
+  
+      if (!raceId) {
+        res.status(400).send('Missing raceId');
+        return;
+      }
+  
+      try {
+        const snapshot = await db.collection('raceChallengeResults').doc(raceId).collection('entries').get();
+        const results = snapshot.docs.map(doc => doc.data());
+        res.status(200).json(results);
+      } catch (error) {
+        console.error('Error fetching challenge results:', error);
+        res.status(500).send('Internal Server Error');
+      }
+    });
+  });

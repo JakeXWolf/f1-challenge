@@ -33,6 +33,19 @@ export class DataService {
   
     return this.http.post<void>(url, { raceId, lineup });
   }
+
+  saveRaceChallengeResults(raceId: string, results: ConstructorResults[]): Observable<void> {
+    const url = 'https://us-central1-f1-challenge-backendapi.cloudfunctions.net/saveRaceChallengeResults';
+    return this.http.post<void>(url, { raceId, results });
+  }
+  
+  getRaceChallengeResults(raceId: string): Observable<ConstructorResults[]> {
+    const url = `https://us-central1-f1-challenge-backendapi.cloudfunctions.net/getRaceChallengeResults?raceId=${raceId}`;
+    return this.http.get<ConstructorResults[]>(url);
+  }
+  
+
+
   
 
   getGrandPrixList(): Observable<GrandPrix[]> {
