@@ -1,4 +1,6 @@
+<!-- <button mat-raised-button (click)="saveAllRaces()">Save Races</button> -->
 
+<!-- Leader Board -->
 <table mat-table [dataSource]="users" class="mat-elevation-z8">
     <!-- Place Column -->
   <ng-container matColumnDef="Place">
@@ -22,39 +24,40 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 
+<!--
 <table mat-table [dataSource]="grandPrixList" class="mat-elevation-z8">
 
-    <!-- RaceNum Column -->
+    <!-- RaceNum Column 
     <ng-container matColumnDef="RaceNum">
       <th mat-header-cell *matHeaderCellDef> Race Number </th>
       <td mat-cell *matCellDef="let grandPrix"> {{grandPrix.RaceNum}} </td>
     </ng-container>
   
-    <!-- Name Column -->
+    <!-- Name Column 
     <ng-container matColumnDef="Name">
       <th mat-header-cell *matHeaderCellDef> Name </th>
       <td mat-cell *matCellDef="let grandPrix"> {{grandPrix.Name}} </td>
     </ng-container>
   
-    <!-- Location Column -->
+    <!-- Location Column 
     <ng-container matColumnDef="Location">
       <th mat-header-cell *matHeaderCellDef> Location </th>
       <td mat-cell *matCellDef="let grandPrix"> {{grandPrix.Location}} </td>
     </ng-container>
   
-    <!-- Date Column -->
+    <!-- Date Column 
     <ng-container matColumnDef="Date">
       <th mat-header-cell *matHeaderCellDef> Date </th>
       <td mat-cell *matCellDef="let grandPrix"> {{grandPrix.Date | date}} </td>
     </ng-container>
   
-    <!-- HasSprint Column -->
+    <!-- HasSprint Column 
     <ng-container matColumnDef="HasSprint">
       <th mat-header-cell *matHeaderCellDef> Has Sprint </th>
       <td mat-cell *matCellDef="let grandPrix"> {{grandPrix.HasSprint}} </td>
     </ng-container>
 
-    <!-- RaceStatus Column -->
+    <!-- RaceStatus Column 
     <ng-container matColumnDef="RaceStatus">
       <th mat-header-cell *matHeaderCellDef> Race Status </th>
       <td mat-cell *matCellDef="let grandPrix"> {{grandPrix.RaceStatus}} </td>
@@ -63,60 +66,128 @@
     <tr mat-header-row *matHeaderRowDef="gpDisplayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: gpDisplayedColumns;"></tr>
 </table>
-
+-->
 
 <mat-accordion multi>
-  <mat-expansion-panel *ngFor="let race of grandPrixList" (opened)="loadRaceContent(race)">
+  <mat-expansion-panel *ngFor="let race of grandPrixList" (opened)="loadRaceContent(race)" >
     <mat-expansion-panel-header>
       <mat-panel-title>
         {{ race.Name }} — {{ race.Location }}
       </mat-panel-title>
       <mat-panel-description>
-        {{ race.RaceStatus }}
+        <div style="padding: 0 10%;">
+          {{ race.Date | date }} 
+        </div>
+        <div>
+          {{ race.RaceStatus }}
+        </div>
       </mat-panel-description>
     </mat-expansion-panel-header>
 
+    <!-- ✅ Race Metadata Table -->
+    <table>
+      <tr><td><b>Race #:</b></td><td>{{ race.RaceNum }}</td></tr>
+      <tr><td><b>Date:</b></td><td>{{ race.Date | date }}</td></tr>
+      <tr><td><b>Sprint:</b></td><td>{{ race.HasSprint }}</td></tr>
+      <tr><td><b>Status:</b></td><td>{{ race.RaceStatus }}</td></tr>
+    </table>
+
+    <!-- ✅ Display full scoring panel if recent 
+    <ng-container *ngIf="shouldShowFullScoring(race)">
+      <app-race-results
+        [raceNum]="race.RaceNum"
+        [isSprint]="false"
+        [drivers]="drivers"
+        [users]="users"
+        [showScoringTools]="true"
+      ></app-race-results>
+    </ng-container>
+
+    <!-- ✅ Completed race w/ readonly scored results 
     <ng-container *ngIf="race.RaceStatus === RaceStatus.COMPLETED">
-      <h3>Race Results</h3>
-      <table mat-table [dataSource]="selectedRaceResults[buildRaceId(race)]" class="mat-elevation-z8" *ngIf="selectedRaceResults[buildRaceId(race)]">
-        <!-- Columns: Position, Driver, Car, Points -->
-        <ng-container matColumnDef="position">
-          <th mat-header-cell *matHeaderCellDef> Pos </th>
-          <td mat-cell *matCellDef="let result"> {{ result.position }} </td>
-        </ng-container>
+      <app-race-results
+        [raceNum]="race.RaceNum"
+        [isSprint]="false"
+        [drivers]="drivers"
+        [users]="users"
+        [showScoringTools]="false"
+      ></app-race-results>
+    </ng-container>
 
-        <ng-container matColumnDef="driver">
-          <th mat-header-cell *matHeaderCellDef> Driver </th>
-          <td mat-cell *matCellDef="let result"> {{ result.driver }} </td>
-        </ng-container>
+    <!-- ✅ Upcoming race within 7 days and no lineup yet 
+    <ng-container *ngIf="shouldShowGenerateLineup(race)">
+      <app-generate-lineup
+        [raceNum]="race.RaceNum"
+        [drivers]="drivers"
+        [users]="users"
+      ></app-generate-lineup>
+    </ng-container>
 
-        <ng-container matColumnDef="car">
-          <th mat-header-cell *matHeaderCellDef> Car </th>
-          <td mat-cell *matCellDef="let result"> {{ result.car }} </td>
+    <!-- ✅ Already generated lineup 
+    <div *ngIf="selectedLineups[buildRaceId(race)]?.length">
+      <h4>Generated Lineup</h4>
+      <table mat-table [dataSource]="selectedLineups[buildRaceId(race)]" class="mat-elevation-z8">
+        <ng-container matColumnDef="User">
+          <th mat-header-cell *matHeaderCellDef> User </th>
+          <td mat-cell *matCellDef="let c"> {{ c.UserName }} </td>
         </ng-container>
-
-        <ng-container matColumnDef="points">
-          <th mat-header-cell *matHeaderCellDef> Points </th>
-          <td mat-cell *matCellDef="let result"> {{ result.points }} </td>
+        <ng-container matColumnDef="Drivers">
+          <th mat-header-cell *matHeaderCellDef> Drivers </th>
+          <td mat-cell *matCellDef="let c"> {{ c.Driver1.Name }} & {{ c.Driver2.Name }} </td>
         </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="['position', 'driver', 'car', 'points']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['position', 'driver', 'car', 'points']"></tr>
+        <tr mat-header-row *matHeaderRowDef="['User', 'Drivers']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['User', 'Drivers']"></tr>
       </table>
+    </div>
+
+    <!-- 💤 Default fallback 
+    <div *ngIf="!shouldShowFullScoring(race) && !shouldShowGenerateLineup(race) && !selectedLineups[buildRaceId(race)]?.length && race.RaceStatus !== RaceStatus.COMPLETED">
+      <p>{{ getRaceDisplayText(race) }}</p>
+    </div>
+    -->
+
+    <ng-container [ngSwitch]="race.RaceStatus">
+      <ng-container *ngSwitchCase="RaceStatus.RACEWEEK">
+        <!-- <ng-container *ngIf="race.HasSprint" style="padding: 3% 5%;">
+          <app-generate-lineup
+            [race]="race"
+            [drivers]="drivers"
+            [isSprint]="true">
+          </app-generate-lineup>
+        </ng-container> -->
+
+        <app-generate-lineup
+          [race]="race"
+          [users]="users"
+          [drivers]="drivers">
+        </app-generate-lineup>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="RaceStatus.COMPLETED">
+        <!-- If Race is not scored yet show generated lineup 
+            USED THIS TO INSERT STATIC TEST-DATA 
+        <ng-container *ngIf="!race.IsScored">
+          <app-generate-lineup
+            [race]="race"
+            [users]="users"
+            [drivers]="drivers">
+          </app-generate-lineup>
+        </ng-container>
+        <ng-container *ngIf="race.IsScored">-->
+          <app-race-results
+            [users]="users"
+            [drivers]="drivers"
+            [race]="race"
+            [showScoringTools]="true">
+          </app-race-results>
+        <!-- </ng-container> -->
+      </ng-container>
+
+      <ng-container *ngSwitchDefault>
+        <p>This race is coming up. Check back later for lineup or results!</p>
+      </ng-container>
     </ng-container>
 
-    <ng-container *ngIf="race.RaceStatus !== RaceStatus.COMPLETED">
-      <div *ngIf="selectedLineups[buildRaceId(race)]?.length">
-        <h3>Pending Lineup</h3>
-        <ul>
-          <li *ngFor="let c of selectedLineups[buildRaceId(race)]">
-            {{ c.UserName }}: {{ c.Driver1.Name }} & {{ c.Driver2.Name }}
-          </li>
-        </ul>
-      </div>
-      <div *ngIf="!selectedLineups[buildRaceId(race)]?.length">
-        {{ getRaceDisplayText(race) }}
-      </div>
-    </ng-container>
   </mat-expansion-panel>
 </mat-accordion>
+

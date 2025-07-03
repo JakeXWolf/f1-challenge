@@ -7,6 +7,8 @@ import { ConstructorResults } from '../../models/constructor-results';
 import { Constructor } from '../../models/constructor';
 import { User } from '../../models/user';
 import { RaceResult } from '../../models/race-results';
+import { GrandPrix } from '../../models/race';
+import { RaceId, buildRaceId } from '../../utils';
 
 @Component({
   selector: 'app-race-results',
@@ -17,6 +19,30 @@ import { RaceResult } from '../../models/race-results';
 export class RaceResultsComponent {
   @Input() drivers: Driver[] = [];
   @Input() users: User[] = [];
+
+  @Input() raceNum!: number;
+  //@Input() isSprint = false;
+  @Input() showScoringTools = true;
+  private _race!: GrandPrix;
+  isSprint: boolean = false;
+
+  @Input()
+  set race(value: GrandPrix) {
+    this._race = value;
+
+    this.checkIfSprint();
+    this.getConstructorLineupByRace();
+  }
+
+  get race(): GrandPrix {
+    return this._race;
+  }
+
+  private checkIfSprint(): void {
+    if (this.race && this.race.HasSprint && this.race.Date && this.race.SprintDate) {
+      this.isSprint = this.race.Name.toLowerCase().includes('sprint');
+    }
+  }
 
   // lineup may not be needed
   constructorLineup: Constructor[] = [];
@@ -30,20 +56,12 @@ export class RaceResultsComponent {
   constructor(private dataService: DataService) {}
 
   ngOnInit(): void {
-    if (this.users.length === 0) {
-      console.log('Users input is empty');
-
-      this.getConstructorLineupByRace();
-
-      //this.getUsersAndSetUpConstructors();
-    }
-
-    if (this.drivers.length === 0) {
+    /*if (this.drivers.length === 0) {
       console.log('Drivers input is empty');
       this.getDrivers();
-    }
+    }*/
   }
-
+/* dont think this is needed anymore
   /// creates object with only users and no drivers
   private getUsersAndSetUpConstructors(): void {
     this.dataService.getUsers().subscribe(users => {
@@ -62,13 +80,61 @@ export class RaceResultsComponent {
       });
     });
   }
+*/
 
+/*
   private getDrivers(): void { 
     this.dataService.getDriverList().subscribe(drivers => {
       this.drivers = drivers; 
     });
   }
+*/
+  parseRaceResults(raw: string): RaceResult[] {
+    const lines = raw
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line !== '');
+  
+    const results: RaceResult[] = [];
+  
+    let i = 0;
+    while (i < lines.length) {
+      // Defensive: check that at least 7 lines remain
+      if (i + 6 >= lines.length) {
+        console.warn(`Skipping incomplete entry at line ${i}:`, lines.slice(i));
+        break;
+      }
+  
+      const pos = lines[i];
+      const number = lines[i + 1];
+      const driver = lines[i + 2];
+      const car = lines[i + 3];
+      const lapsRaw = lines[i + 4];
+      const time = lines[i + 5];
+      const pointsRaw = lines[i + 6];
+  
+      const laps = lapsRaw === 'NC' || lapsRaw === 'DNS' || lapsRaw === 'DNF' ? 0 : parseInt(lapsRaw, 10);
+      const points = parseInt(pointsRaw, 10);
+  
+      results.push({
+        position: pos,
+        number: number,
+        driver: driver,
+        car: car,
+        laps: laps,
+        timeOrRetired: time,
+        points: isNaN(points) ? 0 : points
+      });
+  
+      i += 7;
+    }
+  
+    console.log('✅ Parsed Race Results:', results);
+    return results;
+  }
+  
 
+  /* was breaking from dnf
   parseRaceResults(raw: string): RaceResult[] {
     const lines = raw
       .split('\n')
@@ -93,7 +159,7 @@ export class RaceResultsComponent {
   
     console.log('✅ Cleaned Parsed Results:', results);
     return results;
-  }
+  }*/
   
   
   
@@ -122,38 +188,58 @@ export class RaceResultsComponent {
   }
 */
   private getConstructorLineupByRace(): void {
-    // TODO: Passing in 1 for now, but this should be dynamic
-    this.dataService.getConstructorLineupByRace(1).subscribe(constructorLineup => {
-      this.constructorLineup = constructorLineup;
+    const raceId: RaceId = buildRaceId(this.race.RaceNum, this.isSprint);
 
-      this.constructorResults = this.constructorLineup.map((constructor, index) => {
-        return {
-          UserName: constructor.UserName,
-          Driver1: constructor.Driver1,
-          Driver2: constructor.Driver2,
-          DriverNumbers: constructor.DriverNumbers,
-          ResultMessage: '',
-          TotalPoints: constructor.TotalPoints,
-          PreviousRanking: index + 1,
-          CurrentRanking: index + 1,
-        };
-      });
+    if (!this.race.IsScored) {
+      this.getRaceLineups();
+
+      return;
+    }
+
+    this.getRaceResults();
+  }
+
+  private getRaceLineups(): void { 
+    this.dataService.getRaceLineups(buildRaceId(this.race.RaceNum, this.isSprint)).subscribe({
+      next: (lineup: Constructor[]) => { this.constructorLineup = lineup;
+
+        this.constructorResults = this.constructorLineup.map((constructor, index) => {
+          return {
+            UserName: constructor.UserName,
+            Driver1: constructor.Driver1,
+            Driver2: constructor.Driver2,
+            DriverNumbers: constructor.DriverNumbers,
+            ResultMessage: '',
+            TotalPoints: constructor.TotalPoints,
+            PreviousRanking: index + 1,
+            CurrentRanking: index + 1,
+          };
+        });
+      },
+      error: (err: any) => console.error('Error getting lineup:', err),
+      complete: () => {
+        console.log('Race lineup missing or empty:', this.race);
+        // if (this.constructorLineup.length === 0) {
+        //   this.getUsersAndSetUpConstructors();
+        // }
+      }
     });
   }
 
   private getRaceResults(): void {
-    this.dataService.getRaceResults().subscribe(results => {
+    const raceId = `${this.race.RaceNum}${this.isSprint ? 'SP' : 'GP'}`;
+    this.dataService.getRaceResults(raceId).subscribe(results => {
       this.results = results;
     });
   }
+  
 
 
 
 
 
   rawRaceData: string = ''; // bound to <textarea>
-  isSprint: boolean = false; // manually toggleable, or you can infer from context
-  
+
   displayedColumnsExtended: string[] = [
     'CurrentRanking',
     'UserName',
@@ -171,10 +257,16 @@ export class RaceResultsComponent {
     console.log('Parsed Results:', JSON.stringify(parsedResults, null, 2));
   
     this.constructorResults = this.scoreConstructorResults(this.constructorLineup, parsedResults, isSprint);
-  
+
     this.constructorResults.sort((a, b) => b.TotalPoints - a.TotalPoints);
     this.constructorResults.forEach((c, idx) => {
       c.CurrentRanking = idx + 1;
+
+      // Update total points for users where Name matches
+      const user = this.users.find(user => user.Name === c.UserName);
+      if (user) {
+        user.TotalPoints = c.TotalPoints; // Assuming TotalPoints is a property of user
+      }
     });
 
     console.log('Scored Constructor Results:', JSON.stringify(this.constructorResults, null, 2));
@@ -233,7 +325,7 @@ export class RaceResultsComponent {
         );
   
         const borResults = botrDriverNumbers
-          .map(num => results.find(r => parseInt(r.number, 10) === num))
+          .map(num => results.find(r => parseInt(r.number, 10) === num && r.position !== 'NC' && r.position !== 'DNS'))
           .filter((r): r is RaceResult => !!r);
   
         const bestBorResult = borResults
@@ -246,9 +338,9 @@ export class RaceResultsComponent {
             messages.push(`+0 [#${num}]`);
             continue;
           }
-  
+        
           let score = 0;
-  
+        
           if (isSprint) {
             score = result.points;
           } else {
@@ -257,13 +349,15 @@ export class RaceResultsComponent {
               score = pointsMap[result.number] ?? 0;
             } else {
               // Only the best of the rest gets points
-              score = result.number === bestBorResult?.number ? (pointsMap[result.number] ?? 0) : 0;
+              const isBest = parseInt(result.number, 10) === parseInt(bestBorResult?.number ?? '', 10);
+              score = isBest ? (pointsMap[result.number] ?? 0) : 0;
             }
           }
-  
+        
           messages.push(`+${score} ${result.driver} #${result.number} (P${result.position})`);
           total += score;
         }
+          
       } else {
         // Normal 2-driver constructor
         for (const driverNum of allDriverNumbers) {
@@ -298,7 +392,7 @@ export class RaceResultsComponent {
 
 
   
-
+/*
 
   saveChallengeResults(raceNum: number, isSprint: boolean): void {
     const raceId = `${raceNum}${isSprint ? 'SP' : 'GP'}`;
@@ -310,9 +404,60 @@ export class RaceResultsComponent {
     
   }
   
+*/
 
+/*
+  onSaveResults(): void {
+    const raceId = `${this.race.RaceNum}${this.isSprint ? 'SP' : 'GP'}`;
 
+    // Save Race Results
+    this.dataService.saveRaceResults(raceId, this.results).subscribe({
+      next: () => console.log('Race results saved!'),
+      error: (err: any) => console.error('Error saving race results:', err)
+    });
 
+    // Save Challenge Results
+    this.dataService.saveRaceChallengeResults(raceId, this.constructorResults).subscribe({
+      next: () => console.log('Challenge results saved!'),
+      error: err => console.error('Error saving challenge results:', err)
+    });
+
+    // Save Metadata (optional but recommended for IsScored)
+    const metadata = { ...this.race, IsScored: true };
+    this.dataService.saveRaceMetadata(raceId, metadata).subscribe({
+      next: () => console.log('Metadata updated'),
+      error: err => console.error('Metadata update failed', err)
+    });
+  }
+  */
+
+  onSaveResults(): void {
+    const raceId = `${this.race.RaceNum}${this.isSprint ? 'SP' : 'GP'}`;
+  
+    this.dataService.saveRaceResults(raceId, this.results).subscribe({
+      next: () => console.log('Race results saved!'),
+      error: (err: any) => console.error('Error saving race results:', err)
+    });
+  
+    this.dataService.saveRaceChallengeResults(raceId, this.constructorResults).subscribe({
+      next: () => console.log('Challenge results saved!'),
+      error: err => console.error('Error saving challenge results:', err)
+    });
+  
+    const metadata = { ...this.race, IsScored: true };
+    this.dataService.saveRaceMetadata(raceId, metadata).subscribe({
+      next: () => console.log('Metadata updated'),
+      error: err => console.error('Metadata update failed', err)
+    });
+
+    console.log('Saving users with updated total points:', this.users);
+  
+    this.dataService.saveUsers(this.users).subscribe({
+      next: () => console.log('User total points updated!'),
+      error: err => console.error('Error updating users:', err)
+    });
+  }
+  
 
 
 

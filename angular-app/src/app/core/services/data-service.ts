@@ -9,9 +9,9 @@ import { Driver } from '../models/driver';
 import { RaceResult } from '../models/race-results';
 import { ConstructorResults } from '../models/constructor-results';
 import { Constructor } from '../models/constructor';
-import { constructorLineup_Australia, drivers, grandPrixList, raceResults_Australia } from './test-data';
+import { constructorLineup_Australia, constructorLineup_AustrianGP, constructorLineup_Bahrain, constructorLineup_BarcelonaGP, constructorLineup_CanadaGP, constructorLineup_China_GP, constructorLineup_China_Sprint, constructorLineup_ImolaGP, constructorLineup_Japan, constructorLineup_Miami_GP, constructorLineup_Miami_Sprint, constructorLineup_MonacoGP, constructorLineup_SaudiArabia, drivers, raceResults_Australia } from './test-data';
 
-import { buildRaceId } from '../utils';
+import { buildRaceId, RaceId } from '../utils';
 
 
 @Injectable({
@@ -27,6 +27,7 @@ export class DataService {
     return this.http.get<User[]>(functionUrl);
   }
 
+  /*
   saveConstructorLineup(raceNum: number, isSprint: boolean, lineup: Constructor[]): Observable<void> {
     const raceId = buildRaceId(raceNum, isSprint);
     const url = 'https://us-central1-f1-challenge-backendapi.cloudfunctions.net/saveConstructorLineup';
@@ -38,40 +39,130 @@ export class DataService {
     const url = 'https://us-central1-f1-challenge-backendapi.cloudfunctions.net/saveRaceChallengeResults';
     return this.http.post<void>(url, { raceId, results });
   }
+  */
   
   getRaceChallengeResults(raceId: string): Observable<ConstructorResults[]> {
     const url = `https://us-central1-f1-challenge-backendapi.cloudfunctions.net/getRaceChallengeResults?raceId=${raceId}`;
     return this.http.get<ConstructorResults[]>(url);
   }
-  
+
+
 
 
   
 
+
+  saveRaceResults(raceId: string, results: RaceResult[]): Observable<void> {
+    const url = 'https://us-central1-f1-challenge-backendapi.cloudfunctions.net/saveRaceResults';
+    return this.http.post<void>(url, { raceId, results }, { responseType: 'text' as 'json' });
+  }
+
+  
+  getRaceResults(raceId: string): Observable<RaceResult[]> {
+    const url = `https://us-central1-f1-challenge-backendapi.cloudfunctions.net/getRaceResults?raceId=${raceId}`;
+    return this.http.get<RaceResult[]>(url);
+  }
+  
+  
+
+  /* used to save all races from test-data.ts to Firebase */
+  /* can be used to update RaceStatus and IsScored */
+  saveRaceMetadata(raceId: string, metadata: GrandPrix & { IsScored: boolean }): Observable<void> {
+    const url = 'https://us-central1-f1-challenge-backendapi.cloudfunctions.net/saveRaceMetadata';
+    return this.http.post<void>(url, { raceId, metadata }, { responseType: 'text' as 'json' });
+  }
+
+  // gets RaceMetadata for all Grand Prix
+  getGrandPrixList(): Observable<GrandPrix[]> {
+    const url = 'https://us-central1-f1-challenge-backendapi.cloudfunctions.net/getAllRaceMetadata';
+    return this.http.get<GrandPrix[]>(url);
+  }
+  
+  // gets Race Lineup 
+  getRaceLineups(raceId: string): Observable<Constructor[]> {
+    const url = `https://us-central1-f1-challenge-backendapi.cloudfunctions.net/getRaceLineups?raceId=${raceId}`;
+    return this.http.get<Constructor[]>(url);
+  }
+  
+  
+
+/*
+  // Save Constructor Lineup
+  saveConstructorLineup(raceId: string, lineup: Constructor[], isSprint: boolean): Observable<void> {
+    const url = 'https://us-central1-f1-challenge-backendapi.cloudfunctions.net/saveConstructorLineup';
+    return this.http.post<void>(url, { raceId, lineup, isSprint });
+  }
+  */
+  saveConstructorLineup(
+    raceId: string,
+    lineup: Constructor[],
+    isSprint: boolean
+  ): Observable<void> {
+    
+    console.log('Saving constructor lineup in data-service.ts:', {raceId, lineup, isSprint});
+    const url =
+      "https://us-central1-f1-challenge-backendapi.cloudfunctions.net/saveConstructorLineup";
+    return this.http.post<void>(url, { raceId, lineup, isSprint }, { responseType: 'text' as 'json' });
+  }
+  
+
+  // Save Challenge Results
+  saveRaceChallengeResults(raceId: string, results: ConstructorResults[]): Observable<void> {
+    const url = 'https://us-central1-f1-challenge-backendapi.cloudfunctions.net/saveRaceChallengeResults';
+    return this.http.post<void>(url, { raceId, results }, { responseType: 'text' as 'json' });
+  }
+
+
+  // Save users to update the total points
+  saveUsers(users: User[]): Observable<void> {
+    const url = 'https://us-central1-f1-challenge-backendapi.cloudfunctions.net/saveUsers';
+    return this.http.post<void>(url, { users }, { responseType: 'text' as 'json' });
+  }
+  
+
+
+
+
+  
+
+
+  
+/* Old way to grab grandpixlist - Static data
   getGrandPrixList(): Observable<GrandPrix[]> {
     // TODO: MAKE API CALL
     return of(grandPrixList);
   }
+*/
 
   getDriverList(): Observable<Driver[]> {
     // TODO: MAKE API CALL
     return of(drivers);
   }
 
-  getConstructorLineupByRace(raceNum: number): Observable<Constructor[]> {
-    // TODO: MAKE API CALL
-    const constructorLineup: Constructor[] = [];
+  // using test-data to then be used to save in api firebase
+  getConstructorLineupByRace(raceId: RaceId): Observable<Constructor[]> {
+    const lineupMap: Record<RaceId, Constructor[]> = {
+      '1GP': constructorLineup_Australia,
+      '2SP': constructorLineup_China_Sprint,
+      '2GP': constructorLineup_China_GP,
+      '3GP': constructorLineup_Japan,
+      '4GP': constructorLineup_Bahrain,
+      '5GP': constructorLineup_SaudiArabia,
+      '6SP': constructorLineup_Miami_Sprint,
+      '6GP': constructorLineup_Miami_GP,
+      '7GP': constructorLineup_ImolaGP,
+      '8GP': constructorLineup_MonacoGP,
+      '9GP': constructorLineup_BarcelonaGP,
+      '10GP': constructorLineup_CanadaGP,
+      '11GP': constructorLineup_AustrianGP,
+    };
 
-    if (raceNum === 1) {
-      constructorLineup_Australia.forEach(constructor => {
-        constructorLineup.push(constructor);
-      });
-    }
+    const constructorLineup: Constructor[] = lineupMap[raceId]; // Fixed type for constructorLineup
 
-    return of(constructorLineup);
+    return of(constructorLineup || []); // Return an empty array if undefined
   }
 
-  getRaceResults(): Observable<RaceResult[]> {
+  getStaticRaceResults(): Observable<RaceResult[]> {
     return of(raceResults_Australia);
   }
 

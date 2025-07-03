@@ -7,5 +7,6 @@ export interface GrandPrix {
     Date: Date;
     HasSprint: boolean;
     SprintDate: Date | null;
+    IsScored: boolean | false;
     RaceStatus: RaceStatus;
 }

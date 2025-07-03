@@ -1,4 +1,4 @@
-<div class="race-input-container">
+<!-- <div class="race-input-container">
     <mat-form-field appearance="outline" class="w-full">
       <mat-label>Paste Raw Race Results from F1.com</mat-label>
       <textarea
@@ -21,7 +21,14 @@
       </button>
     </div>
   </div>
-  
+   -->
+
+<!-- Only show if scoring is enabled -->
+<div *ngIf="showScoringTools">
+    <textarea [(ngModel)]="rawRaceData" placeholder="Paste F1.com results here..."></textarea>
+    <button mat-raised-button (click)="onScoreAndPreview(isSprint)">Score & Preview</button>
+    <button mat-raised-button (click)="onSaveResults()">Save</button>
+</div>
   
   <div class="scored-results mt-4" *ngIf="constructorResults.length > 0">
     <h3>Scored Challenge Results</h3>
