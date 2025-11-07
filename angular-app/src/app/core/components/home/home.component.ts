@@ -29,6 +29,11 @@ export class HomeComponent {
   selectedRaceResults: { [key: string]: RaceResult[] } = {};
   selectedLineups: { [key: string]: Constructor[] } = {};
 
+  isAdminMode: boolean = true; // Toggle for admin mode
+
+  // Track which panels are opened
+  openedPanels: { [raceId: string]: boolean } = {};
+
   constructor(private dataService: DataService) {}
 
   ngOnInit() {
@@ -46,8 +51,8 @@ export class HomeComponent {
       this.grandPrixList = grandPrixList
         .map(gp => {
           const raceDate = new Date(gp.Date);
-          const isThisWeek = this.isDateThisWeek(raceDate, today);
           const isPast = raceDate.getTime() < today.getTime();
+          const isThisWeek = !isPast && this.isDateThisWeek(raceDate, today);
     
           return {
             ...gp,
@@ -74,7 +79,21 @@ export class HomeComponent {
     this.dataService.getDriverList().subscribe(drivers => {
       this.drivers = drivers;
     });
+
+    // backfill missed race lineup - calling static method params set up in data-service.ts
+    // this.dataService.saveMissedRaceLineup();
   }
+
+  onPanelOpened(race: GrandPrix) {
+    this.openedPanels[this.buildRaceId(race)] = true;
+    //this.loadRaceContent(race);
+  }
+  
+  onPanelClosed(race: GrandPrix) {
+    this.openedPanels[this.buildRaceId(race)] = false;
+  }
+  
+  /*  is this needed ?
 
   // TODO: should this stuff be in the componenets or out here?
   // how can i only load the open panel
@@ -118,6 +137,7 @@ export class HomeComponent {
     }
   }
   
+  */
 
     
 /*
@@ -161,11 +181,17 @@ export class HomeComponent {
 
   
   isDateThisWeek(date: Date, today: Date = new Date()): boolean {
+    const stripTime = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  
     const oneDay = 86400000;
-    const startOfWeek = new Date(today.getTime() - today.getDay() * oneDay); // Sunday
+    const strippedToday = stripTime(today);
+    const startOfWeek = new Date(strippedToday.getTime() - strippedToday.getDay() * oneDay); // Sunday
     const endOfWeek = new Date(startOfWeek.getTime() + 6 * oneDay); // Saturday
-    return date >= startOfWeek && date <= endOfWeek;
+    const strippedDate = stripTime(date);
+  
+    return strippedDate >= startOfWeek && strippedDate <= endOfWeek;
   }
+  
 
   buildRaceId(race: GrandPrix, isSprint: boolean = false): string {
     return `${race.RaceNum}${isSprint ? 'SP' : 'GP'}`;

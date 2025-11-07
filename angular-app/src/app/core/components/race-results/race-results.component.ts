@@ -25,13 +25,26 @@ export class RaceResultsComponent {
   @Input() showScoringTools = true;
   private _race!: GrandPrix;
   isSprint: boolean = false;
+  raceId: string = '';
 
   @Input()
   set race(value: GrandPrix) {
     this._race = value;
 
     this.checkIfSprint();
-    this.getConstructorLineupByRace();
+
+    this.raceId = buildRaceId(this.race.RaceNum, this.isSprint)
+
+    this.hydrateRaceData();
+  }
+  
+  private hydrateRaceData(): void {
+    if (!this.race.IsScored) {
+      this.getRaceLineups();
+    } else {
+      this.getRaceChallengeResults();
+      this.getRaceResults();
+    }
   }
 
   get race(): GrandPrix {
@@ -43,6 +56,8 @@ export class RaceResultsComponent {
       this.isSprint = this.race.Name.toLowerCase().includes('sprint');
     }
   }
+
+  @Input() isAdminMode: boolean = false; // Toggle for admin mode
 
   // lineup may not be needed
   constructorLineup: Constructor[] = [];
@@ -61,6 +76,7 @@ export class RaceResultsComponent {
       this.getDrivers();
     }*/
   }
+
 /* dont think this is needed anymore
   /// creates object with only users and no drivers
   private getUsersAndSetUpConstructors(): void {
@@ -89,6 +105,32 @@ export class RaceResultsComponent {
     });
   }
 */
+
+  onSyncScores(): void {
+    console.log('Syncing scores... constructorResults:', this.constructorResults);
+    console.log('Syncing scores... users:', this.users);
+
+    this.constructorResults.forEach((constructor) => {
+      constructor.TotalPoints = this.users.find(user => user.Name === constructor.UserName)?.TotalPoints || 0;
+    });
+
+    // Ensure constructorLineup is ordered
+    this.constructorResults.sort((a, b) => b.TotalPoints - a.TotalPoints);
+
+    this.constructorResults.forEach((constructor, index) => {
+      constructor.CurrentRanking = index + 1;
+    });
+
+    let asdf = [...this.constructorResults];
+
+    this.constructorResults = [];
+    this.constructorResults = asdf;
+
+    console.log('Scores synced:', this.constructorResults);
+    console.log('Users after syncing:', this.users);
+  }
+
+
   parseRaceResults(raw: string): RaceResult[] {
     const lines = raw
       .split('\n')
@@ -187,20 +229,8 @@ export class RaceResultsComponent {
     return this.results;
   }
 */
-  private getConstructorLineupByRace(): void {
-    const raceId: RaceId = buildRaceId(this.race.RaceNum, this.isSprint);
-
-    if (!this.race.IsScored) {
-      this.getRaceLineups();
-
-      return;
-    }
-
-    this.getRaceResults();
-  }
-
   private getRaceLineups(): void { 
-    this.dataService.getRaceLineups(buildRaceId(this.race.RaceNum, this.isSprint)).subscribe({
+    this.dataService.getRaceLineups(this.raceId).subscribe({
       next: (lineup: Constructor[]) => { this.constructorLineup = lineup;
 
         this.constructorResults = this.constructorLineup.map((constructor, index) => {
@@ -212,9 +242,12 @@ export class RaceResultsComponent {
             ResultMessage: '',
             TotalPoints: constructor.TotalPoints,
             PreviousRanking: index + 1,
-            CurrentRanking: index + 1,
+            CurrentRanking: 0,
+            TotalGained: 0,
           };
         });
+
+        this.constructorResults.sort((a, b) => b.TotalPoints - a.TotalPoints);
       },
       error: (err: any) => console.error('Error getting lineup:', err),
       complete: () => {
@@ -226,9 +259,15 @@ export class RaceResultsComponent {
     });
   }
 
+  private getRaceChallengeResults(): void {
+    this.dataService.getRaceChallengeResults(this.raceId).subscribe(results => {
+      this.constructorResults = results;
+      this.constructorResults.sort((a, b) => b.TotalPoints - a.TotalPoints);
+    });
+  }
+
   private getRaceResults(): void {
-    const raceId = `${this.race.RaceNum}${this.isSprint ? 'SP' : 'GP'}`;
-    this.dataService.getRaceResults(raceId).subscribe(results => {
+    this.dataService.getRaceResults(this.raceId).subscribe(results => {
       this.results = results;
     });
   }
@@ -256,7 +295,7 @@ export class RaceResultsComponent {
 
     console.log('Parsed Results:', JSON.stringify(parsedResults, null, 2));
   
-    this.constructorResults = this.scoreConstructorResults(this.constructorLineup, parsedResults, isSprint);
+    this.constructorResults = this.scoreConstructorResults(this.constructorResults, parsedResults, isSprint);
 
     this.constructorResults.sort((a, b) => b.TotalPoints - a.TotalPoints);
     this.constructorResults.forEach((c, idx) => {
@@ -310,7 +349,7 @@ export class RaceResultsComponent {
       });
     }
   
-    return lineup.map((constructor) => {
+    return lineup.map((constructor, index) => {
       let total = 0;
       let messages: string[] = [];
   
@@ -325,7 +364,7 @@ export class RaceResultsComponent {
         );
   
         const borResults = botrDriverNumbers
-          .map(num => results.find(r => parseInt(r.number, 10) === num && r.position !== 'NC' && r.position !== 'DNS'))
+          .map(num => results.find(r => parseInt(r.number, 10) === num && r.position !== 'NC' && r.position !== 'DNF' && r.position !== 'DNS' && r.position !== 'DSQ'))
           .filter((r): r is RaceResult => !!r);
   
         const bestBorResult = borResults
@@ -377,10 +416,11 @@ export class RaceResultsComponent {
   
       return {
         ...constructor,
-        TotalPoints: total,
+        TotalPoints: total + (constructor.TotalPoints || 0),
         ResultMessage: messages.join(', '),
-        PreviousRanking: 0,
-        CurrentRanking: 0
+        PreviousRanking: index + 1,
+        CurrentRanking: 0,
+        TotalGained: total
       };
     });
   }
@@ -433,25 +473,29 @@ export class RaceResultsComponent {
 
   onSaveResults(): void {
     const raceId = `${this.race.RaceNum}${this.isSprint ? 'SP' : 'GP'}`;
-  
     this.dataService.saveRaceResults(raceId, this.results).subscribe({
       next: () => console.log('Race results saved!'),
       error: (err: any) => console.error('Error saving race results:', err)
     });
-  
+    
     this.dataService.saveRaceChallengeResults(raceId, this.constructorResults).subscribe({
       next: () => console.log('Challenge results saved!'),
       error: err => console.error('Error saving challenge results:', err)
     });
-  
+    
     const metadata = { ...this.race, IsScored: true };
     this.dataService.saveRaceMetadata(raceId, metadata).subscribe({
       next: () => console.log('Metadata updated'),
       error: err => console.error('Metadata update failed', err)
     });
-
+    
     console.log('Saving users with updated total points:', this.users);
-  
+    
+    /*  To set the users total points to clean stuff up
+    this.users.forEach((user) => {
+      user.TotalPoints = this.constructorResults.find(constructor => user.Name === constructor.UserName)?.TotalPoints || 0;
+    });
+    */
     this.dataService.saveUsers(this.users).subscribe({
       next: () => console.log('User total points updated!'),
       error: err => console.error('Error updating users:', err)

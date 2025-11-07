@@ -32,7 +32,7 @@ export const grandPrixList: GrandPrix[] = [
     { RaceNum: 24, Name: 'Abu Dhabi', Location: 'Yas Marina', Date: new Date('2025-12-07'), HasSprint: false, SprintDate: null, RaceStatus: RaceStatus.UPCOMING }
   ];
 */
-export const drivers: Driver[] = [
+/*export const drivers: Driver[] = [
     { Number: 4, Name: 'Lando Norris', ChampionshipPosition: 1 },
     { Number: 81, Name: 'Oscar Piastri', ChampionshipPosition: 2 },
     { Number: 16, Name: 'Charles Leclerc', ChampionshipPosition: 3 },
@@ -68,6 +68,32 @@ export const drivers: Driver[] = [
     { Number: 5, Name: 'Gabriel Bortoleto', ChampionshipPosition: 20 },
 
   ] ;
+*/
+
+export const drivers: Driver[] = [
+    { Number: 81, Name: 'Oscar Piastri', ChampionshipPosition: 1 },
+    { Number: 4, Name: 'Lando Norris', ChampionshipPosition: 2 },
+    { Number: 1, Name: 'Max Verstappen', ChampionshipPosition: 3 },
+    { Number: 63, Name: 'George Russell', ChampionshipPosition: 4 },
+    { Number: 16, Name: 'Charles Leclerc', ChampionshipPosition: 5 },
+    { Number: 44, Name: 'Lewis Hamilton', ChampionshipPosition: 6 },
+    { Number: 12, Name: 'Andrea Kimi Antonelli', ChampionshipPosition: 7 },
+    { Number: 23, Name: 'Alexander Albon', ChampionshipPosition: 8 },
+    { Number: 31, Name: 'Esteban Ocon', ChampionshipPosition: 9 },
+    { Number: 27, Name: 'Nico Hülkenberg', ChampionshipPosition: 10 },
+    { Number: 6, Name: 'Isack Hadjar', ChampionshipPosition: 11 },
+    { Number: 18, Name: 'Lance Stroll', ChampionshipPosition: 12 },
+    { Number: 10, Name: 'Pierre Gasly', ChampionshipPosition: 13 },
+    { Number: 14, Name: 'Fernando Alonso', ChampionshipPosition: 14 },
+    { Number: 55, Name: 'Carlos Sainz Jr.', ChampionshipPosition: 15 },
+    { Number: 30, Name: 'Liam Lawson', ChampionshipPosition: 16 },
+    { Number: 22, Name: 'Yuki Tsunoda', ChampionshipPosition: 17 },
+    { Number: 87, Name: 'Oliver Bearman', ChampionshipPosition: 18 },
+    { Number: 5, Name: 'Gabriel Bortoleto', ChampionshipPosition: 19 },
+    { Number: 43, Name: 'Franco Colapinto', ChampionshipPosition: 20 }
+  ];
+  
+
 
 export const constructorLineup_Australia: Constructor[] = [
     {
@@ -2175,3 +2201,564 @@ export const constructorLineup_AustrianGP: Constructor[] = [
       "TotalPoints": 0
     }
   ]
+
+
+export const constructorLineup_BritishGP: Constructor[] = [
+    {
+      "UserName": "Jake",
+      "Driver1": {
+        "Number": 44,
+        "Name": "Lewis Hamilton",
+        "ChampionshipPosition": 4
+      },
+      "Driver2": {
+        "Number": 6,
+        "Name": "Isack Hadjar",
+        "ChampionshipPosition": 12
+      },
+      "DriverNumbers": [44, 6],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Joey",
+      "Driver1": {
+        "Number": 16,
+        "Name": "Charles Leclerc",
+        "ChampionshipPosition": 3
+      },
+      "Driver2": {
+        "Number": 30,
+        "Name": "Liam Lawson",
+        "ChampionshipPosition": 11
+      },
+      "DriverNumbers": [16, 30],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Jimmer",
+      "Driver1": {
+        "Number": 12,
+        "Name": "Andrea Kimi Antonelli",
+        "ChampionshipPosition": 8
+      },
+      "Driver2": {
+        "Number": 18,
+        "Name": "Lance Stroll",
+        "ChampionshipPosition": 10
+      },
+      "DriverNumbers": [12, 18],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Nick",
+      "Driver1": {
+        "Number": 23,
+        "Name": "Alexander Albon",
+        "ChampionshipPosition": 13
+      },
+      "Driver2": {
+        "Number": 31,
+        "Name": "Esteban Ocon",
+        "ChampionshipPosition": 16
+      },
+      "DriverNumbers": [23, 31],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Kristin",
+      "Driver1": {
+        "Number": 1,
+        "Name": "Max Verstappen",
+        "ChampionshipPosition": 5
+      },
+      "Driver2": {
+        "Number": 55,
+        "Name": "Carlos Sainz Jr.",
+        "ChampionshipPosition": 14
+      },
+      "DriverNumbers": [1, 55],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Gabe",
+      "Driver1": {
+        "Number": 63,
+        "Name": "George Russell",
+        "ChampionshipPosition": 7
+      },
+      "Driver2": {
+        "Number": 27,
+        "Name": "Nico Hülkenberg",
+        "ChampionshipPosition": 17
+      },
+      "DriverNumbers": [63, 27],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Zac",
+      "Driver1": {
+        "Number": 4,
+        "Name": "Lando Norris",
+        "ChampionshipPosition": 1
+      },
+      "Driver2": {
+        "Number": 14,
+        "Name": "Fernando Alonso",
+        "ChampionshipPosition": 9
+      },
+      "DriverNumbers": [4, 14],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Perry",
+      "Driver1": {
+        "Number": 81,
+        "Name": "Oscar Piastri",
+        "ChampionshipPosition": 2
+      },
+      "Driver2": {
+        "Number": 0,
+        "Name": "Best Of The Rest",
+        "ChampionshipPosition": 0
+      },
+      "DriverNumbers": [81,
+        7,
+        87,
+        31,
+        27,
+        5],
+      "TotalPoints": 0
+    }
+  ];
+  
+
+
+
+export const constructorLineup_SpaSP: Constructor[] = [
+    {
+      "UserName": "Jimmer",
+      "Driver1": {
+        "Number": 1,
+        "Name": "Max Verstappen",
+        "ChampionshipPosition": 3
+      },
+      "Driver2": {
+        "Number": 18,
+        "Name": "Lance Stroll",
+        "ChampionshipPosition": 12
+      },
+      "DriverNumbers": [
+        1,
+        18
+      ],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Nick",
+      "Driver1": {
+        "Number": 23,
+        "Name": "Alexander Albon",
+        "ChampionshipPosition": 8
+      },
+      "Driver2": {
+        "Number": 31,
+        "Name": "Esteban Ocon",
+        "ChampionshipPosition": 9
+      },
+      "DriverNumbers": [
+        23,
+        31
+      ],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Joey",
+      "Driver1": {
+        "Number": 63,
+        "Name": "George Russell",
+        "ChampionshipPosition": 4
+      },
+      "Driver2": {
+        "Number": 0,
+        "Name": "Best Of The Rest",
+        "ChampionshipPosition": 0
+      },
+      "DriverNumbers": [
+        63,
+        10,
+        22,
+        87,
+        5,
+        43
+      ],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Perry",
+      "Driver1": {
+        "Number": 4,
+        "Name": "Lando Norris",
+        "ChampionshipPosition": 2
+      },
+      "Driver2": {
+        "Number": 55,
+        "Name": "Carlos Sainz Jr.",
+        "ChampionshipPosition": 14
+      },
+      "DriverNumbers": [
+        4,
+        55
+      ],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Gabe",
+      "Driver1": {
+        "Number": 16,
+        "Name": "Charles Leclerc",
+        "ChampionshipPosition": 5
+      },
+      "Driver2": {
+        "Number": 6,
+        "Name": "Isack Hadjar",
+        "ChampionshipPosition": 11
+      },
+      "DriverNumbers": [
+        16,
+        6
+      ],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Zac",
+      "Driver1": {
+        "Number": 81,
+        "Name": "Oscar Piastri",
+        "ChampionshipPosition": 1
+      },
+      "Driver2": {
+        "Number": 30,
+        "Name": "Liam Lawson",
+        "ChampionshipPosition": 15
+      },
+      "DriverNumbers": [
+        81,
+        30
+      ],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Kristin",
+      "Driver1": {
+        "Number": 12,
+        "Name": "Andrea Kimi Antonelli",
+        "ChampionshipPosition": 7
+      },
+      "Driver2": {
+        "Number": 14,
+        "Name": "Fernando Alonso",
+        "ChampionshipPosition": 13
+      },
+      "DriverNumbers": [
+        12,
+        14
+      ],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Jake",
+      "Driver1": {
+        "Number": 44,
+        "Name": "Lewis Hamilton",
+        "ChampionshipPosition": 6
+      },
+      "Driver2": {
+        "Number": 27,
+        "Name": "Nico Hülkenberg",
+        "ChampionshipPosition": 10
+      },
+      "DriverNumbers": [
+        44,
+        27
+      ],
+      "TotalPoints": 0
+    }
+  ]
+  
+
+
+  export const constructorLineup_SpaGP: Constructor[] = [
+    {
+      "UserName": "Jimmer",
+      "Driver1": {
+        "Number": 81,
+        "Name": "Oscar Piastri",
+        "ChampionshipPosition": 2
+      },
+      "Driver2": {
+        "Number": 0,
+        "Name": "Best Of The Rest",
+        "ChampionshipPosition": 0
+      },
+      "DriverNumbers": [81, 30, 22, 87, 5, 43],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Jake",
+      "Driver1": {
+        "Number": 4,
+        "Name": "Lando Norris",
+        "ChampionshipPosition": 1
+      },
+      "Driver2": {
+        "Number": 14,
+        "Name": "Fernando Alonso",
+        "ChampionshipPosition": 9
+      },
+      "DriverNumbers": [4, 14],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Kristin",
+      "Driver1": {
+        "Number": 12,
+        "Name": "Andrea Kimi Antonelli",
+        "ChampionshipPosition": 8
+      },
+      "Driver2": {
+        "Number": 10,
+        "Name": "Pierre Gasly",
+        "ChampionshipPosition": 15
+      },
+      "DriverNumbers": [12, 10],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Joey",
+      "Driver1": {
+        "Number": 1,
+        "Name": "Max Verstappen",
+        "ChampionshipPosition": 5
+      },
+      "Driver2": {
+        "Number": 18,
+        "Name": "Lance Stroll",
+        "ChampionshipPosition": 10
+      },
+      "DriverNumbers": [1, 18],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Gabe",
+      "Driver1": {
+        "Number": 23,
+        "Name": "Alexander Albon",
+        "ChampionshipPosition": 13
+      },
+      "Driver2": {
+        "Number": 55,
+        "Name": "Carlos Sainz Jr.",
+        "ChampionshipPosition": 14
+      },
+      "DriverNumbers": [23, 55],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Zac",
+      "Driver1": {
+        "Number": 63,
+        "Name": "George Russell",
+        "ChampionshipPosition": 7
+      },
+      "Driver2": {
+        "Number": 6,
+        "Name": "Isack Hadjar",
+        "ChampionshipPosition": 12
+      },
+      "DriverNumbers": [63, 6],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Nick",
+      "Driver1": {
+        "Number": 16,
+        "Name": "Charles Leclerc",
+        "ChampionshipPosition": 3
+      },
+      "Driver2": {
+        "Number": 27,
+        "Name": "Nico Hülkenberg",
+        "ChampionshipPosition": 17
+      },
+      "DriverNumbers": [16, 27],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Perry",
+      "Driver1": {
+        "Number": 44,
+        "Name": "Lewis Hamilton",
+        "ChampionshipPosition": 4
+      },
+      "Driver2": {
+        "Number": 31,
+        "Name": "Esteban Ocon",
+        "ChampionshipPosition": 16
+      },
+      "DriverNumbers": [44, 31],
+      "TotalPoints": 0
+    }
+  ];
+  
+
+
+  export const constructorLineup_MexicanGP: Constructor[] = [
+    {
+      "UserName": "Joey",
+      "Driver1": {
+        "Number": 81,
+        "Name": "Oscar Piastri",
+        "ChampionshipPosition": 1
+      },
+      "Driver2": {
+        "Number": 31,
+        "Name": "Esteban Ocon",
+        "ChampionshipPosition": 9
+      },
+      "DriverNumbers": [
+        81,
+        31
+      ],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Perry",
+      "Driver1": {
+        "Number": 12,
+        "Name": "Andrea Kimi Antonelli",
+        "ChampionshipPosition": 7
+      },
+      "Driver2": {
+        "Number": 0,
+        "Name": "Best Of The Rest",
+        "ChampionshipPosition": 0
+      },
+      "DriverNumbers": [
+        12,
+        30,
+        22,
+        87,
+        5,
+        43
+      ],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Zac",
+      "Driver1": {
+        "Number": 4,
+        "Name": "Lando Norris",
+        "ChampionshipPosition": 2
+      },
+      "Driver2": {
+        "Number": 55,
+        "Name": "Carlos Sainz Jr.",
+        "ChampionshipPosition": 15
+      },
+      "DriverNumbers": [
+        4,
+        55
+      ],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Gabe",
+      "Driver1": {
+        "Number": 44,
+        "Name": "Lewis Hamilton",
+        "ChampionshipPosition": 6
+      },
+      "Driver2": {
+        "Number": 6,
+        "Name": "Isack Hadjar",
+        "ChampionshipPosition": 11
+      },
+      "DriverNumbers": [
+        44,
+        6
+      ],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Jimmer",
+      "Driver1": {
+        "Number": 1,
+        "Name": "Max Verstappen",
+        "ChampionshipPosition": 3
+      },
+      "Driver2": {
+        "Number": 18,
+        "Name": "Lance Stroll",
+        "ChampionshipPosition": 12
+      },
+      "DriverNumbers": [
+        1,
+        18
+      ],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Kristin",
+      "Driver1": {
+        "Number": 63,
+        "Name": "George Russell",
+        "ChampionshipPosition": 4
+      },
+      "Driver2": {
+        "Number": 10,
+        "Name": "Pierre Gasly",
+        "ChampionshipPosition": 13
+      },
+      "DriverNumbers": [
+        63,
+        10
+      ],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Nick",
+      "Driver1": {
+        "Number": 16,
+        "Name": "Charles Leclerc",
+        "ChampionshipPosition": 5
+      },
+      "Driver2": {
+        "Number": 27,
+        "Name": "Nico Hülkenberg",
+        "ChampionshipPosition": 10
+      },
+      "DriverNumbers": [
+        16,
+        27
+      ],
+      "TotalPoints": 0
+    },
+    {
+      "UserName": "Jake",
+      "Driver1": {
+        "Number": 23,
+        "Name": "Alexander Albon",
+        "ChampionshipPosition": 8
+      },
+      "Driver2": {
+        "Number": 14,
+        "Name": "Fernando Alonso",
+        "ChampionshipPosition": 14
+      },
+      "DriverNumbers": [
+        23,
+        14
+      ],
+      "TotalPoints": 0
+    }
+  ];

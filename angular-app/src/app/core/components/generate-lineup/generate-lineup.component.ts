@@ -38,6 +38,8 @@ export class GenerateLineupComponent implements OnInit {
       this.isSprint = this.race.Name.toLowerCase().includes('sprint');
     }
   }
+  
+  @Input() isAdminMode: boolean = false; // Toggle for admin mode
 
   constructorLineup: Constructor[] = [];
 

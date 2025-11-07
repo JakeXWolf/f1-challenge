@@ -9,7 +9,7 @@ import { Driver } from '../models/driver';
 import { RaceResult } from '../models/race-results';
 import { ConstructorResults } from '../models/constructor-results';
 import { Constructor } from '../models/constructor';
-import { constructorLineup_Australia, constructorLineup_AustrianGP, constructorLineup_Bahrain, constructorLineup_BarcelonaGP, constructorLineup_CanadaGP, constructorLineup_China_GP, constructorLineup_China_Sprint, constructorLineup_ImolaGP, constructorLineup_Japan, constructorLineup_Miami_GP, constructorLineup_Miami_Sprint, constructorLineup_MonacoGP, constructorLineup_SaudiArabia, drivers, raceResults_Australia } from './test-data';
+import { constructorLineup_Australia, constructorLineup_AustrianGP, constructorLineup_Bahrain, constructorLineup_BarcelonaGP, constructorLineup_BritishGP, constructorLineup_CanadaGP, constructorLineup_China_GP, constructorLineup_China_Sprint, constructorLineup_ImolaGP, constructorLineup_Japan, constructorLineup_Miami_GP, constructorLineup_Miami_Sprint, constructorLineup_MonacoGP, constructorLineup_SaudiArabia, constructorLineup_SpaGP, drivers, raceResults_Australia } from './test-data';
 
 import { buildRaceId, RaceId } from '../utils';
 
@@ -26,30 +26,11 @@ export class DataService {
 
     return this.http.get<User[]>(functionUrl);
   }
-
-  /*
-  saveConstructorLineup(raceNum: number, isSprint: boolean, lineup: Constructor[]): Observable<void> {
-    const raceId = buildRaceId(raceNum, isSprint);
-    const url = 'https://us-central1-f1-challenge-backendapi.cloudfunctions.net/saveConstructorLineup';
-  
-    return this.http.post<void>(url, { raceId, lineup });
-  }
-
-  saveRaceChallengeResults(raceId: string, results: ConstructorResults[]): Observable<void> {
-    const url = 'https://us-central1-f1-challenge-backendapi.cloudfunctions.net/saveRaceChallengeResults';
-    return this.http.post<void>(url, { raceId, results });
-  }
-  */
   
   getRaceChallengeResults(raceId: string): Observable<ConstructorResults[]> {
     const url = `https://us-central1-f1-challenge-backendapi.cloudfunctions.net/getRaceChallengeResults?raceId=${raceId}`;
     return this.http.get<ConstructorResults[]>(url);
   }
-
-
-
-
-  
 
 
   saveRaceResults(raceId: string, results: RaceResult[]): Observable<void> {
@@ -86,13 +67,14 @@ export class DataService {
   
   
 
-/*
-  // Save Constructor Lineup
-  saveConstructorLineup(raceId: string, lineup: Constructor[], isSprint: boolean): Observable<void> {
-    const url = 'https://us-central1-f1-challenge-backendapi.cloudfunctions.net/saveConstructorLineup';
-    return this.http.post<void>(url, { raceId, lineup, isSprint });
+
+  // For missed races:
+  /**/
+  saveMissedRaceLineup() {
+    this.saveConstructorLineup('13GP', constructorLineup_SpaGP, false).subscribe({});
   }
-  */
+  
+
   saveConstructorLineup(
     raceId: string,
     lineup: Constructor[],
@@ -120,19 +102,6 @@ export class DataService {
   }
   
 
-
-
-
-  
-
-
-  
-/* Old way to grab grandpixlist - Static data
-  getGrandPrixList(): Observable<GrandPrix[]> {
-    // TODO: MAKE API CALL
-    return of(grandPrixList);
-  }
-*/
 
   getDriverList(): Observable<Driver[]> {
     // TODO: MAKE API CALL

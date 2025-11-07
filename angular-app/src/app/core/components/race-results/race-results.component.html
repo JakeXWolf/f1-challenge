@@ -24,55 +24,92 @@
    -->
 
 <!-- Only show if scoring is enabled -->
-<div *ngIf="showScoringTools">
+<div *ngIf="showScoringTools && isAdminMode">
     <textarea [(ngModel)]="rawRaceData" placeholder="Paste F1.com results here..."></textarea>
     <button mat-raised-button (click)="onScoreAndPreview(isSprint)">Score & Preview</button>
     <button mat-raised-button (click)="onSaveResults()">Save</button>
+
+    <!-- TODO: Only needed for backfilling -->
+    <button mat-raised-button (click)="onSyncScores()">Sync Scores</button>
+
 </div>
   
-  <div class="scored-results mt-4" *ngIf="constructorResults.length > 0">
+<div class="scored-results mt-4" *ngIf="constructorResults.length > 0">
     <h3>Scored Challenge Results</h3>
-  
+
     <table mat-table [dataSource]="constructorResults" class="mat-elevation-z8 w-full">
-  
-      <!-- Rank Column -->
-      <ng-container matColumnDef="CurrentRanking">
+
+        <!-- Rank Column - old
+        <ng-container matColumnDef="CurrentRanking">
         <th mat-header-cell *matHeaderCellDef>🏆 Rank</th>
         <td mat-cell *matCellDef="let row">{{ row.CurrentRanking }}</td>
-      </ng-container>
+        </ng-container>-->
+
+        <!-- Rank Column -->
+        <ng-container matColumnDef="CurrentRanking">
+            <th mat-header-cell *matHeaderCellDef>🏆 Rank</th>
+            <td mat-cell *matCellDef="let row">
+            {{ row.CurrentRanking }}
+            <ng-container *ngIf="row.PreviousRanking !== undefined">
+                <span *ngIf="row.PreviousRanking > row.CurrentRanking" class="rank-up">
+                ▲ {{ row.PreviousRanking - row.CurrentRanking }}
+                </span>
+                <span *ngIf="row.PreviousRanking < row.CurrentRanking" class="rank-down">
+                ▼ {{ row.CurrentRanking - row.PreviousRanking }}
+                </span>
+                <span *ngIf="row.PreviousRanking === row.CurrentRanking" class="rank-same">
+                ▬
+                </span>
+            </ng-container>
+            </td>
+        </ng-container>
   
-      <!-- Constructor Column -->
-      <ng-container matColumnDef="UserName">
+
+        <!-- Constructor Column -->
+        <ng-container matColumnDef="UserName">
         <th mat-header-cell *matHeaderCellDef>Constructor</th>
         <td mat-cell *matCellDef="let row">{{ row.UserName }}</td>
-      </ng-container>
-  
-      <!-- Driver 1 Column -->
-      <ng-container matColumnDef="Driver1">
+        </ng-container>
+
+        <!-- Driver 1 Column -->
+        <ng-container matColumnDef="Driver1">
         <th mat-header-cell *matHeaderCellDef>Driver 1</th>
         <td mat-cell *matCellDef="let row">{{ row.Driver1?.Name }}</td>
-      </ng-container>
-  
-      <!-- Driver 2 Column -->
-      <ng-container matColumnDef="Driver2">
+        </ng-container>
+
+        <!-- Driver 2 Column -->
+        <ng-container matColumnDef="Driver2">
         <th mat-header-cell *matHeaderCellDef>Driver 2</th>
         <td mat-cell *matCellDef="let row">{{ row.Driver2?.Name }}</td>
-      </ng-container>
-  
-      <!-- Total Points Column -->
-      <ng-container matColumnDef="TotalPoints">
+        </ng-container>
+
+        <!-- Total Points Column - old
+        <ng-container matColumnDef="TotalPoints">
         <th mat-header-cell *matHeaderCellDef>Total Points</th>
         <td mat-cell *matCellDef="let row">{{ row.TotalPoints }}</td>
-      </ng-container>
+        </ng-container>-->
+
+        <!-- Total Points Column -->
+        <ng-container matColumnDef="TotalPoints">
+            <th mat-header-cell *matHeaderCellDef>Total Points</th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.TotalPoints }}
+                <ng-container *ngIf="row.TotalGained !== undefined">
+                    <span *ngIf="row.TotalGained > 0" class="points-up"> (+{{ row.TotalGained }}) </span>
+                    <span *ngIf="row.TotalGained == 0" class="points-down"> ({{ row.TotalGained }}) </span>
+                </ng-container>
+            </td>
+        </ng-container>
   
-      <!-- Result Message Column -->
-      <ng-container matColumnDef="ResultMessage">
+
+        <!-- Result Message Column -->
+        <ng-container matColumnDef="ResultMessage">
         <th mat-header-cell *matHeaderCellDef>Details</th>
         <td mat-cell *matCellDef="let row">{{ row.ResultMessage }}</td>
-      </ng-container>
-  
-      <tr mat-header-row *matHeaderRowDef="displayedColumnsExtended"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumnsExtended;"></tr>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsExtended"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsExtended;"></tr>
     </table>
-  </div>
+</div>
   

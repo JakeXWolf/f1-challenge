@@ -69,7 +69,9 @@
 -->
 
 <mat-accordion multi>
-  <mat-expansion-panel *ngFor="let race of grandPrixList" (opened)="loadRaceContent(race)" >
+  <mat-expansion-panel *ngFor="let race of grandPrixList" 
+    (opened)="onPanelOpened(race)"
+    (closed)="onPanelClosed(race)">
     <mat-expansion-panel-header>
       <mat-panel-title>
         {{ race.Name }} — {{ race.Location }}
@@ -146,7 +148,7 @@
     </div>
     -->
 
-    <ng-container [ngSwitch]="race.RaceStatus">
+    <ng-container [ngSwitch]="race.RaceStatus"  *ngIf="openedPanels[buildRaceId(race)]">
       <ng-container *ngSwitchCase="RaceStatus.RACEWEEK">
         <!-- <ng-container *ngIf="race.HasSprint" style="padding: 3% 5%;">
           <app-generate-lineup
@@ -159,7 +161,8 @@
         <app-generate-lineup
           [race]="race"
           [users]="users"
-          [drivers]="drivers">
+          [drivers]="drivers"
+          [isAdminMode]="isAdminMode">
         </app-generate-lineup>
       </ng-container>
 
@@ -178,7 +181,8 @@
             [users]="users"
             [drivers]="drivers"
             [race]="race"
-            [showScoringTools]="true">
+            [showScoringTools]="true"
+            [isAdminMode]="isAdminMode">
           </app-race-results>
         <!-- </ng-container> -->
       </ng-container>
